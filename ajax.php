@@ -837,7 +837,10 @@ from (
                print "<td  class=\"sorttable_rank\">" . $val[rank] . "</td>";
          
             print "<td class=\"sorttable_name_name\"><div>";
-	            if (($_GET[ppage] <> 1 or $val[fname]  == $_GET[user_id]) && $_GET[user_id]>0  ) {
+                        $query = "SELECT selfscore FROM .".$prefix."event_autoconfigurator where event_id =" . $_GET[event_id]  ;		
+			$query_run = mysql_query($query);		
+			$my_result=mysql_result($query_run,0);
+	            if (($_GET[ppage] <> 1 or $val[fname]  == $_GET[user_id]) && $_GET[user_id]>0 && $my_result == 1 ) {
 	            print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" >[Edit]</a>  ";
 	            }
             if ($val[fname] > 0) { 
@@ -1603,5 +1606,4 @@ print "</pre>";
   ?> 
  
   
- 
  
