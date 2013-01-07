@@ -5,8 +5,18 @@ $prefix = $asd->dbprefix;
 $c = mysql_connect($asd->host, $asd->user, $asd->password) or die("no db connect");
 mysql_select_db($asd->db);
 
+$url = $_SERVER['REQUEST_URI']; //returns the current URL,
+//the URI that was given to access this pages
 
-$dir = "/";
+
+$parts = explode('/',$url);
+$dir = "";
+for ($i = 0; $i < count($parts) - 1; $i++) {
+    
+ $dir .= $parts[$i] . "/";
+} 
+
+//$dir = "/";
 ?>
 
 <script src="jquery.js"></script>
