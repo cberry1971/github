@@ -864,7 +864,8 @@ from (
                  print "<br><span>(" . $val2[result] . ") ";
                 
              	 if ($_GET[ppage] <> 1 ) {
-               	print "<a class=\"wwwod\" style=\"cursor: pointer;\"  wod_id=\"".$key2."\" athlete_id=\"".$key."\" wod_type=\"".$val2[wod_type]."\">[Edit]</a>";
+               	//print "<a class=\"wwwod\" style=\"cursor: pointer;\"  wod_id=\"".$key2."\" athlete_id=\"".$key."\" wod_type=\"".$val2[wod_type]."\">[Edit]</a>";
+				print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" >[Edit]</a>  ";
               		}
               		
                 print "</span></td>";
@@ -875,7 +876,8 @@ from (
                print "N/A"; 
                print "</span>";
 	                if ($_GET[ppage] <> 1 ) {
-	               		print "<span><a class=\"wwwod\" style=\"cursor: pointer;\" wod_id=\"".$key2."\" athlete_id=\"".$key."\" wod_type=\"".$val2[wod_type]."\">[Edit]</a></span>";
+	               		//print "<span><a class=\"wwwod\" style=\"cursor: pointer;\" wod_id=\"".$key2."\" athlete_id=\"".$key."\" wod_type=\"".$val2[wod_type]."\">[Edit]</a></span>";
+						print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" >[Edit]</a>  ";
 					}
                  }
               
