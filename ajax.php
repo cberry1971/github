@@ -579,7 +579,7 @@ if ($page == 4) {
     <style>/* Sortable tables */
 
     /* Sortable tables */
-    table.sortable tr
+    table.sortable tr,table.sortable th
     {
     border-bottom: 1px solid #eec;    
     }
@@ -804,29 +804,29 @@ from (
 
         <table border="0" cellspacing="0" cellpadding="1" class="sortable" id="sortable2" >
             <thead> <tr>
-                     <td class="sorttable_rank"><a href="#">Rank</a></td>
-                    <td class="sorttable_name" > <a id="trigger" ff="55" href="#">Name</a> </td>
+                     <th class="sorttable_rank"><a href="#">Rank</a></th>
+                    <th class="sorttable_name" > <a id="trigger" ff="55" href="#">Name</a> </th>
                     
         <?
-     print " <td ><a href=\"#\" >Affiliate</a> </td>";
+     print " <th ><a href=\"#\" >Affiliate</a> </th>";
         $i = 0;
         foreach($arr2 as $keyv => $valv)
         {
-            ?><td class="sorttable_event"><a href="#"  > Event # <? print $i + 1; ?> </a>
+            ?><th class="sorttable_event"><a href="#"  > Event # <? print $i + 1; ?> </a>
                 <div id="pop-up"> <? print $valv; ?></div>
           
-            </td><?
+            </th><?
             ++$i;
         }
         
             if ($ag_cnt > 0) {
-            print " <td ><a href=\"#\" >Category</a> </td>";
+            print " <th ><a href=\"#\" >Category</a> </th>";
         }
         ?>
             
             
                    
-                 <? if ($_GET[ppage] <> 1) { ?>  <td width="30"  class="sorttable_nosort" >&nbsp;</td> <? } ?>
+                 <? if ($_GET[ppage] <> 1) { ?>  <th width="30"  class="sorttable_nosort" >&nbsp;</th> <? } ?>
                 </tr>   </thead>
         <?php
         $i = 1;
@@ -1608,4 +1608,3 @@ print "</pre>";
   ?> 
  
   
- 
