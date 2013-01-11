@@ -627,7 +627,10 @@ if ($page == 4) {
 
     </style>
     
-    
+    <div style="float:left">
+                        <label for="search"> <strong>Search : </strong>
+                        </label><input type="text" id="s2ddfd" style="display: none;"> <input type="text" id="search" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                </div>
     
     <div id="filter">
     <?php
@@ -635,7 +638,7 @@ if ($page == 4) {
     $q4 = mysql_query($sql);
     $ag_cnt = mysql_num_rows($q4);
     if ($ag_cnt > 0) {
-        print "  Category: <select id=\"ag\">";
+        print "  <strong>Category:</strong> <select id=\"ag\">";
         if (!$_GET[ag]) {
             $sl = " selected ";
         }
@@ -652,14 +655,10 @@ if ($page == 4) {
     }
     //check if is event creator
     
-    
-    
+   
     ?>
    
-<a href="#" id="refresh_results" > refresh results</a>  <div style="float:right">
-                        <label for="search"> <strong>Search Box</strong>
-                        </label><input type="text" id="s2ddfd" style="display: none;"> <input type="text" id="search" > 
-                </div>
+<a href="#" id="refresh_results" > refresh results</a><br>  
     </div>
 
         <?
@@ -844,12 +843,22 @@ from (
 	            print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" >[Edit]</a>  ";
 	            }
             if ($val[fname] > 0) { 
-            print "<a href=\"index.php?option=com_comprofiler&task=userprofile&user=".$val[fname]."&Itemid=111\"> ".$val[lname]."</a>";
+            print "<a href=\"index.php?option=com_comprofiler&task=userprofile&user=".$val[fname]."&Itemid=111\"> ".$val[lname].
+"</a>";
+if ($_GET[ppage] <> 1 ) {
+	               		//print "<span><a class=\"wwwod\" style=\"cursor: pointer;\" wod_id=\"".$key2."\" athlete_id=\"".$key."\" wod_type=\"".$val2[wod_type]."\">[Edit]</a></span>";
+						print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" > [Edit]</a>  ";
+					}
+              		
             }
             else
             {
             print "".$val[lname]."";
-                
+if ($_GET[ppage] <> 1 ) {
+	               		//print "<span><a class=\"wwwod\" style=\"cursor: pointer;\" wod_id=\"".$key2."\" athlete_id=\"".$key."\" wod_type=\"".$val2[wod_type]."\">[Edit]</a></span>";
+						print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" > [Edit]</a>  ";
+					}
+            
             }
             print "</div></td>";
             print "<td>".$val[affiliate]."</td>";
@@ -865,7 +874,7 @@ from (
                 
              	 if ($_GET[ppage] <> 1 ) {
                	//print "<a class=\"wwwod\" style=\"cursor: pointer;\"  wod_id=\"".$key2."\" athlete_id=\"".$key."\" wod_type=\"".$val2[wod_type]."\">[Edit]</a>";
-				print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" >[Edit]</a>  ";
+				//print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" >[Edit]</a>  ";
               		}
               		
                 print "</span></td>";
@@ -877,12 +886,14 @@ from (
                print "</span>";
 	                if ($_GET[ppage] <> 1 ) {
 	               		//print "<span><a class=\"wwwod\" style=\"cursor: pointer;\" wod_id=\"".$key2."\" athlete_id=\"".$key."\" wod_type=\"".$val2[wod_type]."\">[Edit]</a></span>";
-						print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" >[Edit]</a>  ";
+						//print "<a href=\"#\" onclick=\"edit(".$key.")\"  id=\"edit\" >[Edit]</a>  ";
 					}
                  }
               
                print "</td>";
             }
+
+
             
                      if ($ag_cnt > 0) {
                 print "<td>";
