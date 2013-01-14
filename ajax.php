@@ -161,7 +161,7 @@ if($page == 1 or $page == 3) {
 				}
 	?>		
     
-<div>    Event available for public from <input name="field1" type="text" id="field1" size="50"  value="<?=$dat?>" /> 
+<div>    Leaderboard visible to public on: <input name="field1" type="text" id="field1" size="50"  value="<?=$dat?>" /> 
 	<span id="saved" style="color: green; ">  </span></div>
 	
 	<? $ss = mysql_query("Select distinct selfscore as ss from ".$prefix."event_autoconfigurator where event_id = ".$_GET[event_id].""); 
@@ -182,7 +182,7 @@ if($page == 1 or $page == 3) {
 if ($page == 1) {
     ?>
 
-    <div id="ag" name="ag"> Categories: <input type="text" value="All" id="ag_input" name="ag_input"><i><sub>(example: M18-30 Rx, M18-30 Scaled,F18-30)</sub></i></div>
+    <div id="ag" name="ag"> Categories: <input type="text" value="All" id="ag_input" name="ag_input"><i><sub>(example: Men Rx, Men Scaled, Women Rx, Women Scaled)</sub></i></div>
 
 
     <div id="pwod1" name="pwod1"><h3>WOD #1</h3>
@@ -338,11 +338,11 @@ if ($page == 3) {
 
     //rendering
     ?>
-    <div class="information" id="information" style="color: red"><b>In case of updating all corresponding results will be erased!</b> 
+    <div class="information" id="information" style="color: red"><b>WARNING: These two buttons will erase results!</b> 
         
         <input type="button" value="Unlock Form" id="unlk" style="height: 25px; width: 180px">  <b> OR </b> <input type="button" value="Populate event" id="pup" style="height: 25px; width: 180px"> <br></div>
    <div id="workarea">
-   <div id="ag" name="ag"> Categories: <input type="text" value="<?= $ag_str ?>" id="ag_input" name="ag_input"><i><sub>(example: M18-50 Rx, M50+ Rx, F18-30 Scaled ...)</sub></i></div>
+   <div id="ag" name="ag"> Categories: <input type="text" value="<?= $ag_str ?>" id="ag_input" name="ag_input"><i><sub>(example: Men Rx, Men Scaled, Women Rx, Women Scaled ...)</sub></i></div>
   
    <div id="subev">
  Select sub-events: <br>
@@ -435,7 +435,7 @@ if ($page == 4) {
 
 		//search table function
 		        function searchTable(inputVal) {
-                var table = j2('#sortable2');
+                var table = j2(".resulttable");
                 table.find('tr').each(function(index, row) {
                 	    var allCells = j2(row).find('td');
                         if (allCells.length > 0) {
@@ -493,7 +493,7 @@ if ($page == 4) {
             
                 
             j2("#ag").change(function() {
-                go(); 
+                //go(); 
             });
             
             j2("#refresh_results").click(function() {
@@ -569,7 +569,7 @@ if ($page == 4) {
          
             
     </script>
-    <script>sorttable.makeSortable(document.getElementById("sortable2"));</script>
+   
     
 <? if ($_GET[ppage] == 0 or !$_GET[ppage] ) { ?>
     <a href="#" id="insr" name="insr" >Insert new data</a>
@@ -616,19 +616,24 @@ if ($page == 4) {
         padding-left: 10px;
     }
    
-    table.sortable thead {
+   
+	
+	
+	
+	 table.sortable thead {
     background-color:#eee;
     color:#666666;
     font-weight: bold;
     cursor: default;
-}
+		
+    }
 
 
 
     </style>
     
     <div style="float:left">
-                        <label for="search"> <strong>Search : </strong>
+                        <label for="search"> <strong>Search: </strong>
                         </label><input type="text" id="s2ddfd" style="display: none;"> <input type="text" id="search" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                 </div>
     
@@ -637,19 +642,33 @@ if ($page == 4) {
     $sql = "Select id, ag from ".$prefix."event_ag where event_id = $_GET[event_id] and ag <> 'All' ";
     $q4 = mysql_query($sql);
     $ag_cnt = mysql_num_rows($q4);
+    $numberofcategory = $ag_cnt;
     if ($ag_cnt > 0) {
         print "  <strong>Category:</strong> <select id=\"ag\">";
         if (!$_GET[ag]) {
             $sl = " selected ";
-        }
-        print "<option $sl  value=\"All\"> All";
+        }$categoryArray = array();
+	   
+     ?>
+       <? if ($_GET[ppage] == 0 or !$_GET[ppage] ) { 
+       print "<option $sl  value=\"All\"> All";
+	   print "<option  value=\"Uncategorized\"> Uncategorized";
+	   array_push($categoryArray, "  ");
+	   array_push($categoryArray, "All");
+	   
+	   $numberofcategory = $numberofcategory +2;
+	   
+       } ?>
+
+      <?
+        //print "<option $sl  value=\"All\"> All";
         while ($d = mysql_fetch_array($q4)) {
             if ($_GET[ag] == $d[ag]) {
                 $sl = " selected ";
             } else {
                 $sl = " ";
             }
-            print "<option $sl value=\"" . str_replace(" ", "%20", $d[ag]) . "\">" . $d[ag] . "";
+            print "<option $sl value=\"" . str_replace(" ", "%20", $d[ag]). "\">" . $d[ag] . "";
         }
         print "     </select>";
     }
@@ -658,13 +677,33 @@ if ($page == 4) {
    
     ?>
    
-<a href="#" id="refresh_results" > refresh results</a><br>  
+<a href="#" id="refresh_results" > Click to Refresh</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<input type="button" name="btn" value="play" onClick="btnfunc()" id="btn" style="width:70px;height:30px;text-align:center;
+margin-bottom:9px" ></input><br>
+
     </div>
 
         <?
         
     
 
+$sqlbil = "Select id, ag from ".$prefix."event_ag where event_id = $_GET[event_id] and ag <> 'All' ";
+    $q4bil = mysql_query($sqlbil);
+   $numbil = 1;
+    $nodata = 0;
+       
+        while ($cbs = mysql_fetch_assoc($q4bil)) {
+        array_push($categoryArray, $cbs['ag']);
+		
+		}
+		foreach ($categoryArray as $valuearray)
+		{
+       $filter_ag = "  AND age_category = '".$valuearray."'";
+	   if($valuearray == "  "){
+		   $filter_ag = "  "; 
+		   }
+?>
+<?
         $sql = "SELECT 
                             wea.id AS athlete_id, 
                             wea.event_id AS event_id, 
@@ -777,6 +816,8 @@ from (
 
         $res = mysql_query($sql);
         $cnt = mysql_num_rows($res);
+        $arr = array();
+       
         if ($cnt) {
             $i = 0;
             while ($row = mysql_fetch_array($res)) {
@@ -801,32 +842,53 @@ from (
           
             ?>
 
-        <table border="0" cellspacing="0" cellpadding="1" class="sortable" id="sortable2" >
+         <?  
+
+echo '<script>sorttable.makeSortable(document.getElementById("sortable'.$numbil.'")); </script>';
+//to give the table a className witch is the category name
+$newtableid = str_replace("AND age_category = '","",$filter_ag);
+$newtableid = str_replace("'","",$newtableid);
+$newtableid = str_replace(" ","",$newtableid);
+
+//for Uncategorized 
+if($valuearray == "All"){
+		   $newtableid = "Uncategorized"; 
+		   }
+// for All
+if($valuearray == "  "){
+		   $newtableid = "All"; 
+		   }
+
+
+echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable resulttable '.$newtableid.'" id="sortable'.$numbil.'"  >
+
+
             <thead> <tr>
                      <th class="sorttable_rank"><a href="#">Rank</a></th>
-                    <th class="sorttable_name" > <a id="trigger" ff="55" href="#">Name</a> </th>
+                    <th class="sorttable_name" style="text-align:left"> <a id="trigger" ff="55" href="#">Name</a> </th>' ?>
                     
         <?
-     print " <th ><a href=\"#\" >Affiliate</a> </th>";
+     print ' <th style="text-align:left"><a href=\"#\" >Affiliate</a> </th>';
         $i = 0;
         foreach($arr2 as $keyv => $valv)
         {
-            ?><th class="sorttable_event"><a href="#"  > Event # <? print $i + 1; ?> </a>
-                <div id="pop-up"> <? print $valv; ?></div>
+			
+            ?><? echo '<th class="sorttable_event" id="pop-up"><a href="#"  >'; print $valv; ?><?  echo '</a>
+                
           
-            </th><?
+            </th>' ?><?
             ++$i;
         }
         
             if ($ag_cnt > 0) {
-            print " <th ><a href=\"#\" >Category</a> </th>";
+            //print " <th ><a href=\"#\" >Category</a> </th>";
         }
         ?>
             
             
                    
-                 <? if ($_GET[ppage] <> 1) { ?>  <th width="30"  class="sorttable_nosort" >&nbsp;</th> <? } ?>
-                </tr>   </thead>
+                 <? if ($_GET[ppage] <> 1) { ?>  <? echo '<th width="30"  class="sorttable_nosort" >&nbsp;</th>' ?> <? } ?>
+                <? echo '</tr>   </thead>' ?>
         <?php
         $i = 1;
         /* $arr[$row[athlete_id]][wod][$row[wod_id]] */
@@ -896,7 +958,7 @@ if ($_GET[ppage] <> 1 ) {
 
             
                      if ($ag_cnt > 0) {
-                print "<td>";
+                print '<td class="categorycolumn">';
                 print $val[age_category];
                 print "</td>";
             }
@@ -914,7 +976,115 @@ if ($_GET[ppage] <> 1 ) {
             print "</tr>";
             ++$i;
         }
-        ?></table>
+        ?> <? echo '</table>'; 
+$numbil = $numbil + 1;
+} else {
+        if($nodata < 1){
+        $nodata = $nodata+1;
+        print '<p id="nodata">No available data</p>';
+        }
+    }
+}?>
+<script>
+//script to make the rotating tables
+
+// to hide the table and no available and categorycolumn
+	j2("table").hide();
+        j2("#nodata").hide();
+        j2(".categorycolumn").hide();
+
+//to make the button pause by default and show the first table
+var rotate = false;
+j2("#sortable"+1).show();
+if ((j2('tr:visible').length)==0){
+	j2("#nodata").show();
+		
+}
+
+
+function btnfunc(){
+	if(j2("#btn").val()=="pause"){
+		j2("#btn").val("play");
+		rotate = false;
+		
+	}else{
+		j2("#btn").val("pause");
+		rotate = true;
+	}
+	
+}
+
+        		
+//onchange
+
+j2("#ag").change(function() {
+               var v4 =    j2("#ag option:selected").val();
+               v4 = v4.replace("%20","");
+              v4 = v4.replace("%20","")
+              v4 = v4.replace("%20","")
+             v4 = v4.replace("%20","")
+              v4 = v4.replace("%20","")
+			   
+          j2("#btn").val("play");
+           rotate = false;
+         j2("table").hide();
+
+          j2("."+v4).show();
+
+         j2("#nodata").hide()	
+        if ((j2('tr:visible').length)==0){
+	j2("#nodata").show();
+		
+	}
+            });
+var t;          
+var i = 0;
+
+//the function that the button play/pause calls when it is clicked
+function func() {
+        
+	if(rotate){
+        
+	if(i>0){ 
+	j2("#sortable"+i).hide();
+
+	}
+        //to rotate the dropdwon category with its table
+        j2("#ag").val(j2("#ag option:eq("+i+")").val());
+	i = i+1;
+   
+	if (i><? echo $numberofcategory?>){
+	i=1;
+		
+	}
+       j2("#nodata").hide();
+        j2("#sortable"+i).show();
+       
+       
+
+       	//to show no available data
+        if ((j2('tr:visible').length)==0){
+	j2("#nodata").show();
+		
+	}
+  	
+                			
+	}
+   
+t=setTimeout(function(){func()},8000);
+   
+   
+}
+
+j2(document).ready(function() {
+   	
+   clearTimeout(t);
+   func();        
+});
+
+
+</script>
+
         	<input type="hidden" id="isBlock" value="0">
     <script>
     function edit(x)
@@ -945,9 +1115,7 @@ if ($_GET[ppage] <> 1 ) {
            
         }
     </script><?
-    } else {
-        print "No available data";
-    }
+    
 } //page == 4
 
 
@@ -1360,7 +1528,7 @@ $num_rows = mysql_num_rows($s);
         if ($ag_cnt > 0) {
             ?>
             <tr class="rsform-block rsform-block-category">
-                <td>Age Category *</td>
+                <td>Category *</td>
                 <td><select  name="ag" <? if($arr[ag]=='All')  { print "selected"; } ?>  id="Category" class="validate[required]" >
         <?php
         while ($row = mysql_fetch_array($q_ag)) {
@@ -1618,4 +1786,3 @@ print "</pre>";
 */
   ?> 
  
-  
