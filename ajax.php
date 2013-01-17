@@ -578,26 +578,29 @@ if ($page == 4) {
   
     <style>/* Sortable tables */
 
-    /* Sortable tables */
+/* Sortable tables */
     table.sortable tr,table.sortable th
     {
-    border-bottom: 1px solid #eec;    
+        
     }
     
     table.sortable 
     {
-        width: 100%;
+        width: auto;
+		
     }
     
     
     .sorttable_event
     {
         text-align: center;
+		
     }
    .sorttable_rank
    {
        width: 40px;
        text-align: center;
+	   vertical-align:center;
    }
     .sortable_edit
     {
@@ -608,26 +611,36 @@ if ($page == 4) {
     .sorttable_name_name
     {
         padding-left: 10px;
+		
        
     }
    
      .sorttable_name
     {
         padding-left: 10px;
+		vertical-align:bottom;
     }
    
-   
-	
-	
-	
-	 table.sortable thead {
+    table.sortable thead {
     background-color:#eee;
     color:#666666;
     font-weight: bold;
     cursor: default;
 		
     }
-
+	
+	td{
+	border:1px solid #e6e6e6;	
+	}
+	
+	tr:nth-child(even) {
+	background: #eee;
+	}
+    
+	tr:nth-child(odd) {
+	background: #FFF
+	}
+	
 
 
     </style>
@@ -698,10 +711,13 @@ $sqlbil = "Select id, ag from ".$prefix."event_ag where event_id = $_GET[event_i
 		}
 		foreach ($categoryArray as $valuearray)
 		{
+			
+			
        $filter_ag = "  AND age_category = '".$valuearray."'";
 	   if($valuearray == "  "){
 		   $filter_ag = "  "; 
 		   }
+	   
 ?>
 <?
         $sql = "SELECT 
@@ -864,16 +880,20 @@ echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable resultt
 
 
             <thead> <tr>
-                     <th class="sorttable_rank"><a href="#">Rank</a></th>
+                     <th class="sorttable_rank" style="vertical-align:bottom;"><a href="#">Rank</a></th>
                     <th class="sorttable_name" style="text-align:left"> <a id="trigger" ff="55" href="#">Name</a> </th>' ?>
                     
         <?
-     print ' <th style="text-align:left"><a href=\"#\" >Affiliate</a> </th>';
+     print ' <th style="text-align:left;padding-left: 10px;vertical-align:bottom;"><a href=\"#\" >Affiliate</a> </th>';
         $i = 0;
         foreach($arr2 as $keyv => $valv)
         {
 			
-            ?><? echo '<th class="sorttable_event" id="pop-up"><a href="#"  >'; print $valv; ?><?  echo '</a>
+            ?><? echo '<th class="sorttable_event" id="pop-up" style="
+			-webkit-transform:rotate(270deg);
+    -moz-transform:rotate(270deg);
+    -o-transform: rotate(270deg);"
+	><a href="#"  >'; print $valv; ?><?  echo '</a>
                 
           
             </th>' ?><?
@@ -923,7 +943,7 @@ if ($_GET[ppage] <> 1 ) {
             
             }
             print "</div></td>";
-            print "<td>".$val[affiliate]."</td>";
+            print '<td style="padding-left: 10px;">'.$val[affiliate].'</td>';
 
             foreach ($val[wod] as $key2 => $val2) {
                 
@@ -990,8 +1010,41 @@ $numbil = $numbil + 1;
 
 // to hide the table and no available and categorycolumn
 	j2("table").hide();
-        j2("#nodata").hide();
-        j2(".categorycolumn").hide();
+    j2("#nodata").hide();
+    j2(".categorycolumn").hide();
+	
+	//to reset the category doprdown you you click to refresh
+	j2('#ag option:first-child').attr("selected","selected");
+	
+	//to cerate the options of select of Stage:
+	var colname ;
+	
+	var biglength = 0;
+	for(var z=4;z<30;z++){
+	
+		colname = j2('th:nth-child('+z+')').text();
+		
+                
+		colname = colname.substr(0, colname.indexOf('\n'));
+		
+                
+        //to get the the biggest header length
+		if(colname.length > biglength){
+			biglength = colname.length;
+		}        
+        
+		
+		
+	}
+	
+	
+
+	
+	//to change the height of the header
+	biglength = biglength/1.5+1;
+	j2('th').css('height', biglength+'em');
+	
+		
 
 //to make the button pause by default and show the first table
 var rotate = false;
@@ -1020,17 +1073,25 @@ function btnfunc(){
 j2("#ag").change(function() {
                var v4 =    j2("#ag option:selected").val();
                v4 = v4.replace("%20","");
-              v4 = v4.replace("%20","")
-              v4 = v4.replace("%20","")
-             v4 = v4.replace("%20","")
-              v4 = v4.replace("%20","")
+              v4 = v4.replace("%20","");
+              v4 = v4.replace("%20","");
+             v4 = v4.replace("%20","");
+              v4 = v4.replace("%20","");
+			  v4 = v4.replace("%20","");
+			  v4 = v4.replace("+","\\+");
+			  
+			  
+			  
+			  
+			  
 			   
           j2("#btn").val("play");
            rotate = false;
          j2("table").hide();
 
           j2("."+v4).show();
-
+		  
+		  
          j2("#nodata").hide()	
         if ((j2('tr:visible').length)==0){
 	j2("#nodata").show();
@@ -1076,8 +1137,13 @@ t=setTimeout(function(){func()},8000);
    
 }
 
+//alert(j2('#frm').width());
+//j2('#frm').width((j2('table').width()));
+
 j2(document).ready(function() {
    	
+	
+	
    clearTimeout(t);
    func();        
 });
