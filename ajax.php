@@ -697,6 +697,34 @@ margin-bottom:9px" ></input><br>
     </div>
 
         <?
+		
+//create a new table to put the percentage of each event in Stage:
+$sqlpercent = "Select weight from ".$prefix."event_autoconfigurator where event_id = $_GET[event_id]  ";
+    $qpercent = mysql_query($sqlpercent);
+   
+       
+echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable"  id="sortable0">
+<thead> <tr>
+            <th></th>
+			<th></th>
+			<th></th>';
+				   
+        while ($cbs = mysql_fetch_assoc($qpercent)) {
+			echo "<th>".$cbs['weight']."</th>";
+			//echo '<th></th>';
+			
+        
+		
+		}
+
+
+			
+					 
+echo '</tr></thead>
+</table>';
+
+//end create a new table to put the percentage of each event in Stage:
+
         
     
 
@@ -1098,6 +1126,164 @@ j2("#ag").change(function() {
 		
 	}
             });
+			
+
+
+			
+function stageonchange() {
+		
+	
+	
+	//to update the Rank
+
+			   
+    
+	var suminrow = new Number(0);
+	var rowCount;
+	var rankinevent;
+	var maxrankinevent;
+	var rankcontent;
+	var eventweight;
+	var rankofrowbefore;
+	var minweight = new Number(100);
+	var thisth;
+
+	//to get the min weight
+	var thCount0 = j2('#sortable0 th').length;
+	for( i= 4;i<thCount0+1 ;i++){
+		thisth = j2('#sortable0 th:nth-child('+i+')').text();
+		thisth= Number(thisth);
+		if(minweight>thisth){
+			minweight=thisth;			
+		}
+	}
+	// end of to get the min weight
+
+	//to get the max rank in each column in each table:
+	
+	var rankarray = new Array(<? echo $numberofcategory +1 ?>);
+	
+	for(i = 1;i<<? echo $numberofcategory?>+1;i++){	
+	     
+		rowCount = j2('#sortable'+i+' tr').length;
+		thCount = j2('#sortable'+i+' th').length;		
+		rankarray[i] = new Array(thCount);
+			
+		for(var d = 4;d<thCount+1;d++){		
+			maxrankinevent = Number(0);
+			for(var c=1;c<rowCount;c++){					
+			
+				rankinevent = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+d+')').text();
+				//alert(rankinevent);
+				if(rankinevent != "N/A" && rankinevent != "Delete"){
+					rankinevent = rankinevent.substr(0, rankinevent.indexOf('('));
+					rankinevent = Number(rankinevent);
+					if (maxrankinevent<rankinevent){
+							maxrankinevent = rankinevent;
+							
+							
+						}
+					
+					
+				}
+			}
+			
+			rankarray[i][d]= maxrankinevent+1;
+			//alert(i+" "+" "+d+"  "+rankarray[i][d]);
+		}
+	}
+	
+	//end of to get the max rank in each column in each table	
+	
+	for(i = 1;i<<? echo $numberofcategory?>+1;i++){	
+		rowCount = j2('#sortable'+i+' tr').length;
+		thCount = j2('#sortable'+i+' th').length;
+		//alert(rowCount1);
+		
+		for(var c=1;c<rowCount;c++){
+			
+			suminrow = 0;//d for column
+			for(var d = 4;d<thCount+1;d++){
+				rankinevent = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+d+')').text();
+				//alert(rankinevent);
+				if(rankinevent != "N/A" && rankinevent != "Delete"){
+					
+					rankinevent = rankinevent.substr(0, rankinevent.indexOf('('));
+				}else{
+					rankinevent = rankarray [i][d];
+				}
+				
+				eventweight = j2('#sortable0 th:nth-child('+d+')').text();
+				
+				//alert("eventweight"+eventweight);
+				eventweight = Number(eventweight);
+				
+				rankinevent = Number(rankinevent)*eventweight/100;
+				//alert("rankinevent"+rankinevent);
+				
+				suminrow = suminrow + Number(rankinevent);
+				//alert("suminrow" +suminrow)
+				
+			
+			
+					
+			}
+			suminrow = (suminrow*100)/minweight;
+			rankcontent = suminrow.toFixed(1);
+			//alert("rankcontent"+rankcontent);
+			if(rankcontent == 0){
+				rankcontent = 999999999;
+				
+			}
+			rankofrowbefore = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text();	
+			j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text(rankofrowbefore+'  ('+rankcontent+')');
+				
+				
+		}
+		
+	}
+	
+	
+	
+	//var rankofrowbefore;
+//	for(i = 1;i<<? //echo $numberofcategory?>+1;i++){
+//		rowCount = j2('#sortable'+i+' tr').length;
+//		for(var c=1;c<rowCount;c++){
+//		
+//			
+//			rankcontent = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text();
+//			if(rankcontent == 999999999){
+//				rankcontent = "--";
+//				j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text('--(--)');
+//			}else{
+//				
+//				j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text(c+'  ('+rankcontent+')');				
+//			
+//				//to verify if the row before has the same average weight:
+//				c=c-1;
+//				rankofrowbefore = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text();
+//				c=c+1;
+//				rankofrowbefore = rankofrowbefore.substr(rankofrowbefore.indexOf('(')+1);
+//				rankofrowbefore= rankofrowbefore.substr(0, rankofrowbefore.indexOf(')'));
+//				
+//				//alert(rankofrowbefore);
+//				//alert("rank ocntent is"+rankcontent);
+//				if(rankofrowbefore==rankcontent){
+//					//c=c-1;
+//					j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text(c-1+'  ('+rankcontent+')');
+//					//c=c+1;
+//										
+//				}else{
+//					j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text(c+'  ('+rankcontent+')');					
+//				}		
+//				
+//			}
+//		}
+//	}
+}
+
+//end of onchange of stage:			
+			
 var t;          
 var i = 0;
 
@@ -1141,8 +1327,10 @@ t=setTimeout(function(){func()},8000);
 //j2('#frm').width((j2('table').width()));
 
 j2(document).ready(function() {
-   	
+   	//j2("#sortable0").show();
 	
+	stageonchange();
+
 	
    clearTimeout(t);
    func();        
