@@ -581,12 +581,17 @@ if ($page == 4) {
 /* Sortable tables */
     table.sortable tr,table.sortable th
     {
+		
         
     }
+	
+	
     
+	
+	
     table.sortable 
     {
-        width: auto;
+        width: 100%;
 		
     }
     
@@ -641,7 +646,12 @@ if ($page == 4) {
 	background: #FFF
 	}
 	
-
+	.Pointscolumn
+   {
+       
+       text-align: center;
+	   vertical-align:center;
+   }
 
     </style>
     
@@ -706,7 +716,7 @@ $sqlpercent = "Select weight from ".$prefix."event_autoconfigurator where event_
 echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable"  id="sortable0">
 <thead> <tr>
             <th></th>
-			<th></th>
+			
 			<th></th>';
 				   
         while ($cbs = mysql_fetch_assoc($qpercent)) {
@@ -717,7 +727,7 @@ echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable"  id="s
 		
 		}
 
-
+print '<th></th>';
 			
 					 
 echo '</tr></thead>
@@ -737,6 +747,10 @@ $sqlbil = "Select id, ag from ".$prefix."event_ag where event_id = $_GET[event_i
         array_push($categoryArray, $cbs['ag']);
 		
 		}
+		
+		//to veridy that $categoryArray is not empty
+		if( count($categoryArray)>0){
+			
 		foreach ($categoryArray as $valuearray)
 		{
 			
@@ -909,19 +923,23 @@ echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable resultt
 
             <thead> <tr>
                      <th class="sorttable_rank" style="vertical-align:bottom;"><a href="#">Rank</a></th>
-                    <th class="sorttable_name" style="text-align:left"> <a id="trigger" ff="55" href="#">Name</a> </th>' ?>
+                    <th class="sorttable_name" style="text-align:left"> <a id="trigger" ff="55" href="#">Competitor</a> </th>' ?>
                     
         <?
-     print ' <th style="text-align:left;padding-left: 10px;vertical-align:bottom;"><a href=\"#\" >Affiliate</a> </th>';
+    // print ' <th style="text-align:left;padding-left: 10px;vertical-align:bottom;"><a href=\"#\" >Affiliate</a> </th>';
         $i = 0;
         foreach($arr2 as $keyv => $valv)
         {
 			
-            ?><? echo '<th class="sorttable_event" id="pop-up" style="
+            ?><? echo '<th  style="vertical-align:bottom;padding-bottom:20px"   id="pop-up" 
+	><a href="#"  ><p style="text-align:right;padding-left:20px;
 			-webkit-transform:rotate(270deg);
     -moz-transform:rotate(270deg);
-    -o-transform: rotate(270deg);"
-	><a href="#"  >'; print $valv; ?><?  echo '</a>
+    -o-transform: rotate(270deg);
+	
+	
+	
+	">'; print $valv; ?><?  echo '</p></a>
                 
           
             </th>' ?><?
@@ -930,6 +948,7 @@ echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable resultt
         
             if ($ag_cnt > 0) {
             //print " <th ><a href=\"#\" >Category</a> </th>";
+			print ' <th style="vertical-align:bottom;" class="sorttable_event" id="pop-up" ><a href="#" >Points</a> </th>';
         }
         ?>
             
@@ -970,8 +989,10 @@ if ($_GET[ppage] <> 1 ) {
 					}
             
             }
+			
+			 print '<br><span >'.$val[affiliate].'</span>';
             print "</div></td>";
-            print '<td style="padding-left: 10px;">'.$val[affiliate].'</td>';
+           
 
             foreach ($val[wod] as $key2 => $val2) {
                 
@@ -1006,9 +1027,13 @@ if ($_GET[ppage] <> 1 ) {
 
             
                      if ($ag_cnt > 0) {
-                print '<td class="categorycolumn">';
-                print $val[age_category];
-                print "</td>";
+                //print '<td class="categorycolumn">';
+//                print $val[age_category];
+//                print "</td>";
+
+					print '<td class="Pointscolumn" >';
+					//print'cnn';
+					print "</td>";
             }
             
            if ($_GET[ppage] <> 1 ) {
@@ -1032,14 +1057,19 @@ $numbil = $numbil + 1;
         print '<p id="nodata">No available data</p>';
         }
     }
-}?>
+	
+}
+}//end if count(arra
+?>
 <script>
 //script to make the rotating tables
 
 // to hide the table and no available and categorycolumn
-	j2("table").hide();
+	j2("table[class^='sortable']").hide();
+	
     j2("#nodata").hide();
-    j2(".categorycolumn").hide();
+    //j2(".categorycolumn").hide();
+	
 	
 	//to reset the category doprdown you you click to refresh
 	j2('#ag option:first-child').attr("selected","selected");
@@ -1048,7 +1078,7 @@ $numbil = $numbil + 1;
 	var colname ;
 	
 	var biglength = 0;
-	for(var z=4;z<30;z++){
+	for(var z=3;z<30;z++){
 	
 		colname = j2('th:nth-child('+z+')').text();
 		
@@ -1095,37 +1125,66 @@ function btnfunc(){
 	
 }
 
+//to push the footer to the bottom
+
+function footerpush(){	
+    
+	var v4 = j2("#ag option:selected").val();
+    v4 = v4.replace("%20","");
+    v4 = v4.replace("%20","");
+    v4 = v4.replace("%20","");
+    v4 = v4.replace("%20","");
+    v4 = v4.replace("%20","");
+	v4 = v4.replace("%20","");
+	v4 = v4.replace("+","\\+");	
+		if(1){
+			//alert("sfs");
+			
+			var footermargin = new Number(0);
+			if(Number(j2('.'+v4).height())+175 < 571){
+				//alert("sfs");
+				footermargin = 571 -( Number(j2('.'+v4).height())+175) ;
+				
+			j2('#rt-footer').css('margin-top', footermargin +'px');
+			}else{
+				j2('#rt-footer').css('margin-top', '0px');
+				//alert("sfs");
+			}
+		}
+}
+//end ofo to push the footer to the bottom
         		
-//onchange
+//onchange of category:
 
 j2("#ag").change(function() {
-               var v4 =    j2("#ag option:selected").val();
-               v4 = v4.replace("%20","");
-              v4 = v4.replace("%20","");
-              v4 = v4.replace("%20","");
-             v4 = v4.replace("%20","");
-              v4 = v4.replace("%20","");
-			  v4 = v4.replace("%20","");
-			  v4 = v4.replace("+","\\+");
-			  
-			  
-			  
-			  
-			  
-			   
-          j2("#btn").val("play");
-           rotate = false;
-         j2("table").hide();
 
-          j2("."+v4).show();
-		  
-		  
-         j2("#nodata").hide()	
-        if ((j2('tr:visible').length)==0){
-	j2("#nodata").show();
+footerpush();
+
+
+	var v4 = j2("#ag option:selected").val();
+    v4 = v4.replace("%20","");
+    v4 = v4.replace("%20","");
+    v4 = v4.replace("%20","");
+    v4 = v4.replace("%20","");
+    v4 = v4.replace("%20","");
+	v4 = v4.replace("%20","");
+	v4 = v4.replace("+","\\+");
+			   
+    j2("#btn").val("play");
+    rotate = false;
+    j2("table[class^='sortable']").hide();
+
+    j2("."+v4).show();
+	
+	
 		
+
+    j2("#nodata").hide()	
+    if ((j2('tr:visible').length)==0){
+		j2("#nodata").show();
 	}
-            });
+});
+//end of onchange of category:
 			
 
 
@@ -1150,7 +1209,7 @@ function stageonchange() {
 
 	//to get the min weight
 	var thCount0 = j2('#sortable0 th').length;
-	for( i= 4;i<thCount0+1 ;i++){
+	for( i= 3;i<thCount0 ;i++){
 		thisth = j2('#sortable0 th:nth-child('+i+')').text();
 		thisth= Number(thisth);
 		if(minweight>thisth){
@@ -1169,7 +1228,7 @@ function stageonchange() {
 		thCount = j2('#sortable'+i+' th').length;		
 		rankarray[i] = new Array(thCount);
 			
-		for(var d = 4;d<thCount+1;d++){		
+		for(var d = 3;d<thCount;d++){		
 			maxrankinevent = Number(0);
 			for(var c=1;c<rowCount;c++){					
 			
@@ -1195,15 +1254,26 @@ function stageonchange() {
 	
 	//end of to get the max rank in each column in each table	
 	
+	function trim1 (str) {
+    	return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+	}
+	var lastcol;
 	for(i = 1;i<<? echo $numberofcategory?>+1;i++){	
 		rowCount = j2('#sortable'+i+' tr').length;
 		thCount = j2('#sortable'+i+' th').length;
+		//alert(j2('#sortable'+i+' tr:nth-child(1) td:last-child').text());
+		lastcol = j2('#sortable'+i+' th:last-child').text();
+		if( (trim1(lastcol) == "" )){
+			
+			thCount  = thCount - 1;
+			
+		}
 		//alert(rowCount1);
 		
 		for(var c=1;c<rowCount;c++){
 			
 			suminrow = 0;//d for column
-			for(var d = 4;d<thCount+1;d++){
+			for(var d = 3;d<thCount;d++){
 				rankinevent = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+d+')').text();
 				//alert(rankinevent);
 				if(rankinevent != "N/A" && rankinevent != "Delete"){
@@ -1236,7 +1306,7 @@ function stageonchange() {
 				
 			}
 			rankofrowbefore = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text();	
-			j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text(rankofrowbefore+'  ('+rankcontent+')');
+			j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+thCount+')').text('('+rankcontent+')');
 				
 				
 		}
@@ -1291,7 +1361,8 @@ var i = 0;
 function func() {
         
 	if(rotate){
-        
+    
+	   
 	if(i>0){ 
 	j2("#sortable"+i).hide();
 
@@ -1306,6 +1377,7 @@ function func() {
 	}
        j2("#nodata").hide();
         j2("#sortable"+i).show();
+		footerpush();
        
        
 
@@ -1318,18 +1390,113 @@ function func() {
                 			
 	}
    
-t=setTimeout(function(){func()},8000);
+t=setTimeout(function(){func()},2000);
    
    
-}
+}//end func()
 
-//alert(j2('#frm').width());
-//j2('#frm').width((j2('table').width()));
+function resetwidth() {
+	//to reset width when refresh
+	var windwidth = j2(window).width();
+	
+	
+	
+	j2('.rt-pull-9').css('position','relative');
+	
+	if(windwidth>959 && windwidth <1200){
+		j2('.rt-grid-9').width(720);
+		j2('.rt-grid-12').width(960);
+		
+		j2('.rt-pull-9').css('left','-720px');
+		j2('.rt-grid-3').width(240);
+		
+	}else if(windwidth>767 && windwidth <960){
+		j2('.rt-grid-9').width(576);
+		j2('.rt-grid-12').width(768);
+		
+		j2('.rt-pull-9').css('left','-576px');
+		j2('.rt-grid-3').width(192);
+		
+	}else if(windwidth>480 && windwidth <768){
+		j2('.rt-grid-9').width(480);
+		j2('.rt-grid-12').width(480);
+		
+		j2('.rt-pull-9').css('left','auto');
+		j2('.rt-grid-3').css('width','100%');
+		
+	}else if( windwidth <481){
+		j2('.rt-grid-9').css('width','95%');
+		j2('.rt-grid-12').css('width','95%');
+		
+		j2('.rt-pull-9').css('left','auto');
+		j2('.rt-grid-3').css('width','100%');
+		
+	}if(windwidth>1199 ){
+		j2('.rt-grid-9').width(900);
+		j2('.rt-grid-12').width(1200);
+		
+		j2('.rt-pull-9').css('left','-900px');
+		j2('.rt-grid-3').width(300);
+		
+		
+	}
+	
+	
+	//end of to reset width when refresh 
+	//alert(j2('table').width());
+	//j2('.rt-grid-12').width(1200);
+
+ 	//to change the width when the table is bigger (contains many events)
+	var sumall = 0 ;  	
+	for(i=1;i<40;i++){	
+		sumall = sumall + j2('tr:nth-child(1) td:nth-child('+i+')').width();	
+		
+	}
+	sumall = sumall+116;
+	//alert(sumall);
+	
+	
+	
+	
+	if(sumall>j2('table').width() && sumall > windwidth){
+	
+		
+		//sumall = sumall+116;
+		
+		j2('.rt-grid-9').width(sumall);
+		
+		j2('.rt-grid-12').width(sumall);
+		
+		//j2('.rt-grid-12').width(1200);
+		//alert("last"+j2('table').width());
+	    
+	
+		if(windwidth>767){
+			j2('.rt-pull-9').css('left','0px');
+			j2('.rt-pull-9').css('position','absolute');
+			
+		
+		}else{
+			j2('.rt-grid-3').width(sumall);
+			
+			
+		
+		}
+	
+	}
+}
+//end of to change the width when the table is bigger (contains many events)
+
+
+
+
+
 
 j2(document).ready(function() {
    	//j2("#sortable0").show();
-	
 	stageonchange();
+	resetwidth();
+	
 
 	
    clearTimeout(t);
