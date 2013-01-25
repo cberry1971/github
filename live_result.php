@@ -1,3 +1,29 @@
+<style>
+
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        40%;
+    left:       35%;
+    height:     20%;
+    width:      30%;
+    background: #6CF 
+                url('images/loading.gif') 
+                50% 50% 
+                no-repeat;
+	border-radius:10px;
+}
+
+p#loading{
+	position:   fixed;
+	top:        44%;
+    left:       43%;
+	font-size:18px;
+	
+}
+
+</style>
 <?
 $user =& JFactory::getUser();
 $uid = $user->get('id');
@@ -36,6 +62,8 @@ if ($_GET[evn]) {
              j(document).ready(function(){
         
                  j("#event_id").change(function(event){
+					 j(".modal").css("display","block");
+					
                      var v = j("#event_id option:selected").val();
                      if(v > 0)
                      {
@@ -77,6 +105,7 @@ $prefix = $asd->dbprefix;
     }
     $str .= "</select>";
     echo $str;
+	echo '<div class="modal"><p id="loading" >Loading ...</p></div>';
     echo "<div id=\"wa\"></div>";
     ?></form><?
     mysql_close($c);

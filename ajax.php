@@ -578,6 +578,17 @@ if ($page == 4) {
   
     <style>/* Sortable tables */
 
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   speak for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+
+
 /* Sortable tables */
     table.sortable tr,table.sortable th
     {
@@ -710,6 +721,7 @@ if ($page == 4) {
 <input type="button" name="btn" value="play" onClick="btnfunc()" id="btn" style="width:70px;height:30px;text-align:center;
 margin-bottom:9px" ></input>&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#" id="refresh_results" > Click to Refresh</a>
+
 <br>
 
     </div>
@@ -1178,7 +1190,8 @@ function footerpush(){
 		}
 }
 //end ofo to push the footer to the bottom
-        		
+
+       		
 //onchange of category:
 
 j2("#ag").change(function() {
@@ -1577,6 +1590,7 @@ function resetwidth() {
 		}
 	
 	}
+	
 }
 //end of to change the width when the table is bigger (contains many events)
 
@@ -1594,7 +1608,9 @@ j2(document).ready(function() {
 	
    clearTimeout(t);
    func();        
-    j2("#open_event").change()
+    j2("#open_event").change();
+	//alert("algeria");
+	j2(".modal").css("display","none");
    
 });
 
@@ -2302,4 +2318,5 @@ print_r($arr4);
 print "</pre>";
 */
   ?> 
- 
+
+
