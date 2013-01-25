@@ -700,9 +700,17 @@ if ($page == 4) {
    
     ?>
    
-<a href="#" id="refresh_results" > Click to Refresh</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+
+
+<label for="search" > <strong>Stage: </strong></label>
+<select id="open_event">
+
+</select>&nbsp;&nbsp;&nbsp;&nbsp;
 <input type="button" name="btn" value="play" onClick="btnfunc()" id="btn" style="width:70px;height:30px;text-align:center;
-margin-bottom:9px" ></input><br>
+margin-bottom:9px" ></input>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#" id="refresh_results" > Click to Refresh</a>
+<br>
 
     </div>
 
@@ -713,7 +721,7 @@ $sqlpercent = "Select weight from ".$prefix."event_autoconfigurator where event_
     $qpercent = mysql_query($sqlpercent);
    
        
-echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable"  id="sortable0">
+echo ' <table border="1" cellspacing="0" cellpadding="1" class="sortable"  id="sortable0">
 <thead> <tr>
             <th></th>
 			
@@ -721,7 +729,7 @@ echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable"  id="s
 				   
         while ($cbs = mysql_fetch_assoc($qpercent)) {
 			echo "<th>".$cbs['weight']."</th>";
-			//echo '<th></th>';
+			echo '<th></th>';
 			
         
 		
@@ -927,12 +935,13 @@ echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable resultt
                     
         <?
     // print ' <th style="text-align:left;padding-left: 10px;vertical-align:bottom;"><a href=\"#\" >Affiliate</a> </th>';
-        $i = 0;
+        $numberofevent = 0;//it was used for the number of the event
         foreach($arr2 as $keyv => $valv)
-        {
+        for($col=1;$col<3;$col++){
+		{
 			
             ?><? echo '<th  style="vertical-align:bottom;padding-bottom:20px"   id="pop-up" 
-	><a href="#"  ><p style="text-align:right;padding-left:20px;
+	><a href="#"  ><p style="text-align:center;padding-left:20px;
 			-webkit-transform:rotate(270deg);
     -moz-transform:rotate(270deg);
     -o-transform: rotate(270deg);
@@ -943,12 +952,13 @@ echo ' <table border="0" cellspacing="0" cellpadding="1" class="sortable resultt
                 
           
             </th>' ?><?
-            ++$i;
+         $numberofevent++;
         }
+		}//end for of the $col
         
             if ($ag_cnt > 0) {
             //print " <th ><a href=\"#\" >Category</a> </th>";
-			print ' <th style="vertical-align:bottom;" class="sorttable_event" id="pop-up" ><a href="#" >Points</a> </th>';
+			print ' <th style="vertical-align:bottom;"  ><a href="#">Points</a> </th>';
         }
         ?>
             
@@ -996,6 +1006,7 @@ if ($_GET[ppage] <> 1 ) {
 
             foreach ($val[wod] as $key2 => $val2) {
                 
+				for($col=1;$col<3;$col++){
                if($val2[result] <> 0)
                { print "<td class=\"sorttable_event\" sorttable_customkey=\"".$val2[wod_rank]."\" id=\"td_".$val2[wod_type]."_".$key."_".$key2."\"><span id=\"td_".$val2[wod_type]."_".$key."_".$key2."_span\">";
                 print $val2[wod_rank];
@@ -1022,6 +1033,7 @@ if ($_GET[ppage] <> 1 ) {
                  }
               
                print "</td>";
+			   }//end if for $col
             }
 
 
@@ -1050,15 +1062,16 @@ if ($_GET[ppage] <> 1 ) {
             ++$i;
         }
         ?> <? echo '</table>'; 
-$numbil = $numbil + 1;
+
 } else {
         if($nodata < 1){
         $nodata = $nodata+1;
         print '<p id="nodata">No available data</p>';
-        }
+         }
     }
+$numbil = $numbil + 1;	
 	
-}
+}//end each categoryarray
 }//end if count(arra
 ?>
 <script>
@@ -1066,25 +1079,25 @@ $numbil = $numbil + 1;
 
 // to hide the table and no available and categorycolumn
 	j2("table[class^='sortable']").hide();
+	//j2("#sortable0").show();
 	
     j2("#nodata").hide();
     //j2(".categorycolumn").hide();
 	
-	
-	//to reset the category doprdown you you click to refresh
-	j2('#ag option:first-child').attr("selected","selected");
-	
 	//to cerate the options of select of Stage:
 	var colname ;
-	
+	var y=0;
 	var biglength = 0;
-	for(var z=3;z<30;z++){
 	
+	
+	
+	for(var z=4;z<<? echo $numberofevent+3 ?>;z=z+2){
+	j2('td:nth-child('+z+'),th:nth-child('+z+')').hide();
+		j2('td:nth-child('+z+')').html('-');
 		colname = j2('th:nth-child('+z+')').text();
 		
                 
 		colname = colname.substr(0, colname.indexOf('\n'));
-		
                 
         //to get the the biggest header length
 		if(colname.length > biglength){
@@ -1092,16 +1105,28 @@ $numbil = $numbil + 1;
 		}        
         
 		
-		
+		y++;
+		j2("#open_event").append(new Option(colname, "open_event"+y));
 	}
+	y=0;
+	//end of cerate the options of select of Stage:
 	
-	
-
 	
 	//to change the height of the header
 	biglength = biglength/1.5+1;
 	j2('th').css('height', biglength+'em');
 	
+	
+	
+
+	//set last option of Stage: as default
+	j2('#open_event option:last-child').attr("selected","selected");
+	
+	//to reset the category doprdown you you click to refresh
+	j2('#ag option:first-child').attr("selected","selected");
+	
+	
+
 		
 
 //to make the button pause by default and show the first table
@@ -1186,12 +1211,41 @@ footerpush();
 });
 //end of onchange of category:
 			
-
+//onchange of stage:
+j2("#open_event").change(function() {
+	stageonchange();
+	
+});
 
 			
 function stageonchange() {
 		
+	j2("#btn").val("play");
+    rotate = false;
+
+
+    //v7 is the number of the event in Stagte :start from 1 for the first event in the Stage: dropdown
 	
+	//to hide or show the column
+	var v7 = j2("#open_event option:selected").val();
+    v7 = v7.replace("open_event","");
+	
+	for(var d = 3;d<(v7*2)-1+2+1;d=d+1){
+		
+			j2('td:nth-child('+d+'),th:nth-child('+d+')').show();
+			d=d+1;
+			j2('td:nth-child('+d+'),th:nth-child('+d+')').hide();
+	}
+	
+	
+	for(var s=(v7*2)+2+1;s<<? echo $numberofevent+3 ?>;s=s+1){
+		
+	j2('td:nth-child('+s+'),th:nth-child('+s+')').hide();
+	s=s+1;
+	j2('td:nth-child('+s+'),th:nth-child('+s+')').show();
+		
+		
+	}
 	
 	//to update the Rank
 
@@ -1209,9 +1263,11 @@ function stageonchange() {
 
 	//to get the min weight
 	var thCount0 = j2('#sortable0 th').length;
-	for( i= 3;i<thCount0 ;i++){
-		thisth = j2('#sortable0 th:nth-child('+i+')').text();
+	//alert("thCount0:"+thCount0);
+	for( i= 3;i<thCount0 ;i=i+2){
+		thisth = j2('#sortable0 th:nth-child('+i+')').text();		
 		thisth= Number(thisth);
+		//alert(i+" dcs "+ thisth);
 		if(minweight>thisth){
 			minweight=thisth;			
 		}
@@ -1228,13 +1284,13 @@ function stageonchange() {
 		thCount = j2('#sortable'+i+' th').length;		
 		rankarray[i] = new Array(thCount);
 			
-		for(var d = 3;d<thCount;d++){		
+		for(var d = 3;d<thCount;d=d+2){		
 			maxrankinevent = Number(0);
 			for(var c=1;c<rowCount;c++){					
 			
 				rankinevent = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+d+')').text();
 				//alert(rankinevent);
-				if(rankinevent != "N/A" && rankinevent != "Delete"){
+				if(rankinevent != "N/A" && rankinevent != "Delete" ){
 					rankinevent = rankinevent.substr(0, rankinevent.indexOf('('));
 					rankinevent = Number(rankinevent);
 					if (maxrankinevent<rankinevent){
@@ -1246,7 +1302,7 @@ function stageonchange() {
 					
 				}
 			}
-			
+			//alert(d+"  dcs "+maxrankinevent);
 			rankarray[i][d]= maxrankinevent+1;
 			//alert(i+" "+" "+d+"  "+rankarray[i][d]);
 		}
@@ -1257,6 +1313,7 @@ function stageonchange() {
 	function trim1 (str) {
     	return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 	}
+	
 	var lastcol;
 	for(i = 1;i<<? echo $numberofcategory?>+1;i++){	
 		rowCount = j2('#sortable'+i+' tr').length;
@@ -1268,14 +1325,17 @@ function stageonchange() {
 			thCount  = thCount - 1;
 			
 		}
-		//alert(rowCount1);
+		//alert("billel");
+		var verify = false;
+		
 		
 		for(var c=1;c<rowCount;c++){
 			
+			
 			suminrow = 0;//d for column
-			for(var d = 3;d<thCount;d++){
+			for(var d = 3;d<(v7*2)+2+1;d=d+2){
 				rankinevent = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+d+')').text();
-				//alert(rankinevent);
+				//alert(d+" sxcxc "+rankinevent);
 				if(rankinevent != "N/A" && rankinevent != "Delete"){
 					
 					rankinevent = rankinevent.substr(0, rankinevent.indexOf('('));
@@ -1299,33 +1359,60 @@ function stageonchange() {
 					
 			}
 			suminrow = (suminrow*100)/minweight;
+			//alert("minweight "+minweight);
+			//alert("suminrow "+suminrow);
+			
 			rankcontent = suminrow.toFixed(1);
 			//alert("rankcontent"+rankcontent);
-			if(rankcontent == 0){
-				rankcontent = 999999999;
-				
-			}
-			rankofrowbefore = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text();	
-			j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+thCount+')').text('('+rankcontent+')');
+			
+			//rankofrowbefore = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text();	
+			j2('#sortable'+i+' tr:nth-child('+c+') td:first-child').text(rankcontent);
+			verify=true;
+//			nth-child('+thCount+')
 				
 				
 		}
 		
+		j2(".sorttable_name").click();
+	j2(".sorttable_rank").click();
+	var rankcontent1;
+	if(verify){
+		
+	for(var c=1;c<rowCount;c++){
+		
+			
+			rankcontent1 = Number(j2('#sortable'+i+' tr:nth-child('+c+') td:first-child').text());
+			
+			//alert("rankcontent " +rankcontent);
+//			alert(thCount);
+			j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+thCount+')').text(rankcontent1 );
+//			c=c-1
+//			contentofrowbefore = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+thCount+')').text();
+//			alert("rankcontent " +rankcontent)
+//			rankofrowbefore = j2('#sortable'+i+' tr:nth-child('+c+') td:first-child').text();
+//			c=c+1;
+			//alert(rankofrowbefore);
+				//alert("rank ocntent is"+rankcontent);
+			if(c==1){
+				j2('#sortable'+i+' tr:nth-child('+c+') td:first-child').text(1);
+			}else{
+			
+				c=c-1
+			contentofrowbefore = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child('+thCount+')').text();
+			
+			rankofrowbefore = j2('#sortable'+i+' tr:nth-child('+c+') td:first-child').text();
+			c=c+1;
+				if(contentofrowbefore==rankcontent1){
+					
+					j2('#sortable'+i+' tr:nth-child('+c+') td:first-child').text(Number(rankofrowbefore));
+					
+										
+				}else{
+					j2('#sortable'+i+' tr:nth-child('+c+') td:first-child').text(c);
+				}
+			}
 	}
-	
-	
-	
-	//var rankofrowbefore;
-//	for(i = 1;i<<? //echo $numberofcategory?>+1;i++){
-//		rowCount = j2('#sortable'+i+' tr').length;
-//		for(var c=1;c<rowCount;c++){
-//		
-//			
-//			rankcontent = j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text();
-//			if(rankcontent == 999999999){
-//				rankcontent = "--";
-//				j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text('--(--)');
-//			}else{
+			//{
 //				
 //				j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text(c+'  ('+rankcontent+')');				
 //			
@@ -1336,20 +1423,26 @@ function stageonchange() {
 //				rankofrowbefore = rankofrowbefore.substr(rankofrowbefore.indexOf('(')+1);
 //				rankofrowbefore= rankofrowbefore.substr(0, rankofrowbefore.indexOf(')'));
 //				
-//				//alert(rankofrowbefore);
-//				//alert("rank ocntent is"+rankcontent);
-//				if(rankofrowbefore==rankcontent){
-//					//c=c-1;
-//					j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text(c-1+'  ('+rankcontent+')');
-//					//c=c+1;
-//										
-//				}else{
-//					j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text(c+'  ('+rankcontent+')');					
-//				}		
+//						
 //				
 //			}
-//		}
-//	}
+		}
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	thCount=<? echo $numberofevent+3 ?>;
+	var contentofrowbefore;
+	for(i = 1;i<<? echo $numberofcategory?>+1;i++){
+		rowCount = j2('#sortable'+i+' tr').length;
+		
+	}
+
 }
 
 //end of onchange of stage:			
@@ -1501,6 +1594,8 @@ j2(document).ready(function() {
 	
    clearTimeout(t);
    func();        
+    j2("#open_event").change()
+   
 });
 
 
@@ -2057,6 +2152,7 @@ $num_rows = mysql_num_rows($s);
                                                
                                                
                                             
+
                                     }
                             });
                 });
