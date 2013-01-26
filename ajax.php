@@ -894,6 +894,7 @@ from (
 
         $res = mysql_query($sql);
         $cnt = mysql_num_rows($res);
+		//echo $cnt;
         $arr = array();
        
         if ($cnt) {
@@ -1087,8 +1088,11 @@ $numbil = $numbil + 1;
 }//end if count(arra
 ?>
 <script>
-//script to make the rotating tables
 
+
+
+//script to make the rotating tables
+//alert(("#All th").length);
 // to hide the table and no available and categorycolumn
 	j2("table[class^='sortable']").hide();
 	//j2("#sortable0").show();
@@ -1134,6 +1138,7 @@ $numbil = $numbil + 1;
 	//set last option of Stage: as default
 	j2('#open_event option:last-child').attr("selected","selected");
 	
+	
 	//to reset the category doprdown you you click to refresh
 	j2('#ag option:first-child').attr("selected","selected");
 	
@@ -1146,6 +1151,7 @@ var rotate = false;
 j2("#sortable"+1).show();
 if ((j2('tr:visible').length)==0){
 	j2("#nodata").show();
+	
 		
 }
 
@@ -1425,6 +1431,7 @@ function stageonchange() {
 				}
 			}
 	}
+	
 			//{
 //				
 //				j2('#sortable'+i+' tr:nth-child('+c+') td:nth-child(1)').text(c+'  ('+rankcontent+')');				
@@ -1496,7 +1503,7 @@ function func() {
                 			
 	}
    
-t=setTimeout(function(){func()},2000);
+t=setTimeout(function(){func()},14000);
    
    
 }//end func()
@@ -1601,16 +1608,27 @@ function resetwidth() {
 
 j2(document).ready(function() {
    	//j2("#sortable0").show();
+	
+	if(j2("tr:visible").length<3){
+	j2(".modal").css("display","none");
+	return false;
+}
+	
 	stageonchange();
 	resetwidth();
 	
 
 	
    clearTimeout(t);
-   func();        
+    
+   func(); 
+         
     j2("#open_event").change();
 	//alert("algeria");
 	j2(".modal").css("display","none");
+	
+	
+	
    
 });
 
