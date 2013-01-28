@@ -42,7 +42,7 @@ if($page == 1 or $page == 3) {
                             j5.ajax({
                                    type: "POST",
                                     url: "ajax.php?page=13&event_id=" +v,
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                           	
                                         alert(html);          
@@ -60,7 +60,7 @@ if($page == 1 or $page == 3) {
                                    type: "POST",
                                     url: "ajax.php?page=16&event_id=<?=$_GET[event_id]?>&data=" + ss.is(':checked'),
                                     
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                     	//alert(html)
                                           
@@ -78,7 +78,7 @@ if($page == 1 or $page == 3) {
                                    type: "POST",
                                     url: "ajax.php?page=14&event_id=<?=$_GET[event_id]?>&dates=" + c,
                                     
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                     //	alert(html)
                                     	j5("#saved").text(" saved!");         
@@ -114,12 +114,12 @@ if($page == 1 or $page == 3) {
     else {
                       
                   
-                    // Отсылаем паметры
+                    // –û—Ç—?—ã–ª–∞–µ–º –ø–∞–º–µ—Ç—Ä—ã
                            j5.ajax({
                                     type: "POST",
                                     url: "ajax.php?page=2",
                                     data: datas,
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                       var v = j5("#event_id option:selected").val();
                                       AnyTime.noPicker("field1");
@@ -553,7 +553,7 @@ if ($page == 4) {
                                    type: "POST",
                                    data: "val="+new_res.val(),
                                    url: "ajax.php?page=15&wod_id="+wod_id+"&athlete_id="+athlete_id+"&wod_type="+wod_type,
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                            go();          
                                          }
@@ -1023,7 +1023,24 @@ if ($_GET[ppage] <> 1 ) {
                if($val2[result] <> 0)
                { print "<td class=\"sorttable_event\" sorttable_customkey=\"".$val2[wod_rank]."\" id=\"td_".$val2[wod_type]."_".$key."_".$key2."\"><span id=\"td_".$val2[wod_type]."_".$key."_".$key2."_span\">";
                 print $val2[wod_rank];
-                if($val2[wod_type]=='time'){$val2[result] = date("i:s", mktime(0,0,$val2[result])); }
+                if($val2[wod_type]=='time'){
+                		
+                	/*Below Code added by Alka patel*/
+                	/*
+                	$arr_time = explode(".",$val2[result]);
+                	$vvv =  date("i:s", mktime(0,0,$arr_time[0]));
+						if(!empty($arr_time[1]))
+							$vvv=$vvv.'.'.$arr_time[1];
+						else
+							$vvv=$vvv.'.0';
+					
+					$val2[result] = $vvv;
+					*/				
+					/*Code End*/
+					/*Below line commented by Alka patel*/			
+                	$val2[result] = date("i:s", mktime(0,0,$val2[result]));
+               
+               }
                 print "</span>";
                  print "<br><span>(" . $val2[result] . ") ";
                 
@@ -1650,7 +1667,7 @@ j2(document).ready(function() {
                                     type: "POST",
                                     url: "ajax.php?page=8",
                                     data: "athlete_id=" + x,
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                           
                                                
@@ -1839,12 +1856,12 @@ $num_rows = mysql_num_rows($s);
                  // alert("6")
                    
                    
-                    // Отсылаем паметры
+                    // –û—Ç—?—ã–ª–∞–µ–º –ø–∞–º–µ—Ç—Ä—ã
                            j4.ajax({
                                     type: "POST",
                                     url: "ajax.php?page=6",
                                     data: datas,
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                         
                                         //alert(html)
@@ -1890,7 +1907,14 @@ $num_rows = mysql_num_rows($s);
                     $fname = $atlname;
                 }
                    
-               
+               		  /*Following code Added by Alka patel*/
+						
+                   		$selectWoodType = mysql_query("select * from `".$prefix."event_autoconfigurator` where event_id =" . $event_id);
+						$arrWoodType = array();$cntx=0;
+						while($row = mysql_fetch_array($selectWoodType)) { $arrWoodType[$cntx++] = $row; }
+						
+				   /*End code*/ 	
+                
                     $sql_a = " INSERT INTO ".$prefix."event_athlete (event_id,fname,lname,gender,age_category,category) 
                      VALUE ($event_id,'" . $fname . "','" . $lname . "','" . $gender . "','" . $ag . "','" . $cat . "')";
                     mysql_query($sql_a);
@@ -1901,8 +1925,21 @@ $num_rows = mysql_num_rows($s);
                         if(1 == preg_match('/[0-9][0-9]:[0-5][0-9]/', $val, $matches))
                         {
                             $a = explode(":", $val);
-                            $val =  $a[0] * 60 + $a[1];
-                        }
+                             $val =  $a[0] * 60 + $a[1]; // commented By Alka patel
+							//$val =  $a[0] * 60 + round($a[1],1); //Added by Alka patel
+                          /*Following code Added by Alka patel*/
+                        }else{
+								for($v=0;$v<=3;$v++){
+									if($arrWoodType[$v]['id'] == $key){
+										$temp_type = $arrWoodType[$v]['type'];
+										$val = ($temp_type == 'weight') ? round($val,2) : round($val) ;
+										break;
+									}
+								}
+								
+							}
+                        /*End Code*/
+                        
                         $sql_r = "INSERT INTO ".$prefix."event_result (athlete_id,wod_id,result) VALUES ($res,$key,'" . $val . "')";
                         mysql_query($sql_r);
                     }
@@ -1943,7 +1980,21 @@ $num_rows = mysql_num_rows($s);
                        }
                        else
                        {
-                          $arr[wod][$res[wod_id]] = date("i:s", mktime(0,0,$res[result]));
+                           /*Below section added by Alka patel*/
+                        /*
+                        $arr_time = explode(".",$res[result]);
+						$vvv =  date("i:s", mktime(0,0,$arr_time[0]));
+						if(!empty($arr_time[1]))
+							$vvv=$vvv.'.'.$arr_time[1];
+						else
+							$vvv=$vvv.'.0';
+						
+						$arr[wod][$res[wod_id]] = $vvv;
+						*/
+						/*End Section*/
+						
+						/*Below Line commented by Alka patel*/	  
+                       	$arr[wod][$res[wod_id]] = date("i:s", mktime(0,0,$res[result]));
                        }
                     }
                
@@ -1974,7 +2025,12 @@ $num_rows = mysql_num_rows($s);
         
         j7(document).ready(function(){
                 j7.mask.definitions['#']='[012345]';
+                
                 <? foreach($wod as $k => $v) { if($v[type] == 'time') { ?>
+                <? /*In below line mask('#9:#9') replaced with mask('#9:#9.9')
+						* Replace by Alka patel
+						*/ 
+					?>
                 j7("#wod\\[<? print $v[id]; ?>\\]").mask('#9:#9').val('<? print $arr[wod][$v[id]]; ?>');
            <?
                 } else 
@@ -2128,12 +2184,12 @@ $num_rows = mysql_num_rows($s);
                    
                    var datas = j4('#frm').serialize();
          // alert("34")
-                    // Отсылаем паметры
+                    // –û—Ç—?—ã–ª–∞–µ–º –ø–∞–º–µ—Ç—Ä—ã
                            j4.ajax({
                                     type: "POST",
                                     url: "ajax.php?page=6",
                                     data: datas,
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                        //  alert(html);
                                             
@@ -2169,7 +2225,7 @@ $num_rows = mysql_num_rows($s);
     
      var j11 = jQuery.noConflict();
       j11(document).ready(function(){
-       // Отсылаем паметры
+       // –û—Ç—?—ã–ª–∞–µ–º –ø–∞–º–µ—Ç—Ä—ã
       j11("#shab").click( function() {
         var datas = j11('#frm').serialize();
         var v =     j11("#event_id option:selected").val();
@@ -2177,7 +2233,7 @@ $num_rows = mysql_num_rows($s);
                                     type: "POST",
                                     url: "ajax.php?page=11&event_id=" + v,
                                     data: datas,
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                         
                                             
@@ -2229,7 +2285,7 @@ $num_rows = mysql_num_rows($s);
     
      var j11 = jQuery.noConflict();
       j11(document).ready(function(){
-       // Отсылаем паметры
+       // –û—Ç—?—ã–ª–∞–µ–º –ø–∞–º–µ—Ç—Ä—ã
       j11("#shab").click( function() {
         var datas = j11('#frm').serialize();
         var v =     j11("#event_id option:selected").val();
@@ -2237,7 +2293,7 @@ $num_rows = mysql_num_rows($s);
                                     type: "POST",
                                     url: "ajax.php?page=11&event_id=" + v,
                                     data: datas,
-                                    // Выводим то что вернул PHP
+                                    // –í—ã–≤–æ–¥–∏–º —Ç–æ —á—Ç–æ –≤–µ—Ä–Ω—É–ª PHP
                                     success: function(html) {
                                         
                                             
